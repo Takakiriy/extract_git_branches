@@ -1,0 +1,4 @@
+# Apple gitignore configuration.
+
+# mac Finder
+.DS_Store
