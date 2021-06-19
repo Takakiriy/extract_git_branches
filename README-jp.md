@@ -1,7 +1,7 @@
 # extract_git_branches
 <!-- Character Encoding: "WHITE SQUARE" U+25A1 is □. -->
 
-ブランチごとにフォルダーを作り、それぞれのフォルダーでチェックアウトします。
+`.git` フォルダーを元にブランチごとにフォルダーを作り、それぞれのフォルダーでチェックアウトします。
 
 <!-- TOC depthFrom:1 -->
 

@@ -1,6 +1,7 @@
 # extract_git_branches
 
-extract_git_branches creates each folder for each branch and check out in each folder.
+extract_git_branches creates each folder for each branch and check out in each folder
+based on the `.git` folder.
 
 [日本語 README](./README-jp.md)
 

@@ -3,14 +3,13 @@ import * as main from './main';
 import * as lib from './lib';
 
 function  exitFromCommander(e: commander.CommanderError) {
-	console.log(e.message);
+    if (e.code !== 'commander.version') {
+		console.log(e.message);
+	}
 }
 async function  callMain() {
 	commander.program.version('0.1.1').exitOverride(exitFromCommander)
-		.option("-l, --locale <s>")
-		.option("-t, --test")
-		.option("-c, --command <s>")
-		.option("-i, --input")
+        .exitOverride(exitFromCommander)
 		.parse(process.argv);
 
 	for (const arg of commander.program.args) {
