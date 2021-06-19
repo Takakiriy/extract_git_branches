@@ -1,5 +1,8 @@
 import * as path from "path";  // or path = require("path")
+import * as fs from "fs";  // file system
 import * as lib from "./lib";
+import simpleGit from 'simple-git';  // const simpleGit = require('simple-git');
+const git = simpleGit();
 
 // main
 export async function  main() {
@@ -11,11 +14,27 @@ export async function  main() {
         console.log('extract_git_branches  __DotGitFolderPath__');
         return;
     }
-    const  dotGitFolder = programArguments[0];
+    const  currentFolder = process.cwd();
+    const  dotGitFolderFullPath = path.resolve(programArguments[0]);
+    const  workingFolderFullPath = path.dirname(dotGitFolderFullPath);
 
-	lib.copyFolderSync(dotGitFolder, '_current_branch/.git');
+    try {
+        // branchNames = ...
+        await lib.copyFolderSync(dotGitFolderFullPath, `${workingFolderFullPath}/_current_branch/.git`);
+        process.chdir(`${workingFolderFullPath}/_current_branch`);
+        const  branchOutput = await git.branch();
+        const  branchNames = Object.keys(branchOutput.branches).filter((branchName)=>(!branchName.includes('/')));
+        process.chdir(workingFolderFullPath);
+        fs.rmdirSync(`${workingFolderFullPath}/_current_branch`, {recursive: true});
 
-    console.log('test:' + dotGitFolder);
+        for (const branchName of branchNames) {
+            await lib.copyFolderSync(dotGitFolderFullPath, `${workingFolderFullPath}/branch_${branchName}/.git`);
+            process.chdir(`${workingFolderFullPath}/branch_${branchName}`);
+
+        }
+    } finally {
+        process.chdir(currentFolder);
+    }
 }
 
 // println
@@ -30,22 +49,6 @@ function  println(message: any) {
     }
 }
 console.log = println;
-
-// pathResolve
-function  pathResolve(path_: string) {
-
-    // '/c/home' format to current OS format
-    if (path_.length >= 3) {
-        if (path_[0] === '/'  &&  path_[2] === '/') {
-            path_ = path_[1] +':'+ path_.substr(2);
-        }
-    }
-
-    // Change separators to OS format
-    path_ = path.resolve(path_);
-
-    return path_
-}
 
 // callMainFromJest
 export function  callMainFromJest(parameters?: string[], options?: {[name: string]: string}) {

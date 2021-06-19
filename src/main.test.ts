@@ -9,10 +9,22 @@ if (path.basename(process.cwd()) !== 'src') {
     process.chdir('src');
 }
 
-test('First', async () => {
+test('1 branch', async () => {
     fs.rmdirSync('test_data/_work', {recursive: true});
     await  lib.copyFolderSync('test_data/1.git',  'test_data/_work/.git');
 
     callMain(['test_data/_work/.git']);
+    expect(fs.existsSync('test_data/_work/branch/master/1.txt')).toBe(true);
+    fs.rmdirSync('test_data/_work', {recursive: true});
+});
+
+test('2 branch', async () => {
+    fs.rmdirSync('test_data/_work', {recursive: true});
+    await  lib.copyFolderSync('test_data/2.git',  'test_data/_work/.git');
+
+    callMain(['test_data/_work/.git']);
+    expect(fs.existsSync('test_data/_work/branch/master/1.txt')).toBe(true);
+    expect(fs.existsSync('test_data/_work/branch/develop/1.txt')).toBe(true);
+    expect(fs.existsSync('test_data/_work/branch/develop/2.txt')).toBe(true);
     fs.rmdirSync('test_data/_work', {recursive: true});
 });

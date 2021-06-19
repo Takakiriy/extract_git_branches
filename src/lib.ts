@@ -5,7 +5,7 @@ import * as globby from 'globby';
 // copyFolderSync
 // #keyword: copyFolderSync
 // sourceFolder/1.txt => destinationFolderPath/1.txt
-async function  copyFolderSync(sourceFolderPath: string, destinationFolderPath: string) {
+export async function  copyFolderSync(sourceFolderPath: string, destinationFolderPath: string) {
     const  currentFolderPath = process.cwd();
     const  destinationFolderFullPath = getFullPath(destinationFolderPath, currentFolderPath);
     process.chdir(sourceFolderPath);
@@ -23,7 +23,7 @@ async function  copyFolderSync(sourceFolderPath: string, destinationFolderPath: 
 // copyFileSync
 // #keyword: copyFileSync
 // This also makes the copy target folder.
-function  copyFileSync(sourceFilePath: string, destinationFilePath: string) {
+export function  copyFileSync(sourceFilePath: string, destinationFilePath: string) {
 	const  destinationFolderPath = path.dirname(destinationFilePath);
 	fs.mkdirSync(destinationFolderPath, {recursive: true});
 
@@ -31,7 +31,10 @@ function  copyFileSync(sourceFilePath: string, destinationFilePath: string) {
 }
 
 // getFullPath
-function  getFullPath(relativePath: string, basePath: string): string {
+// #keyword: JavaScript (js) library getFullPath
+// If "basePath" is current directory, you can call "path.resolve"
+// If the variable has full path and litteral relative path, write `${___FullPath}/relative_path}`
+export function  getFullPath(relativePath: string, basePath: string): string {
     var    fullPath = '';
     const  slashRelativePath = relativePath.replace(/\\/g,'/');
     const  colonSlashIndex = slashRelativePath.indexOf(':/');
@@ -51,13 +54,13 @@ function  getFullPath(relativePath: string, basePath: string): string {
 }
 
 // getHomePath
+// #keyword: getHomePath
 function  getHomePath(): string {
     if (process.env.HOME) {
         return  process.env.HOME;
+    } else if (process.env.USERPROFILE) {
+        return  process.env.USERPROFILE;
     } else {
-        return  process.env.USERPROFILE!;
+        throw new Error('unexpected');
     }
 }
-
-// export
-export { copyFolderSync };
