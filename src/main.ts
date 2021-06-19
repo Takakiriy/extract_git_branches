@@ -27,10 +27,11 @@ export async function  main() {
         process.chdir(workingFolderFullPath);
         fs.rmdirSync(`${workingFolderFullPath}/_current_branch`, {recursive: true});
 
-        for (const branchName of branchNames) {
+        for await (const branchName of branchNames) {
             await lib.copyFolderSync(dotGitFolderFullPath, `${workingFolderFullPath}/branch_${branchName}/.git`);
             process.chdir(`${workingFolderFullPath}/branch_${branchName}`);
 
+            // git.checkout('.');
         }
     } finally {
         process.chdir(currentFolder);
