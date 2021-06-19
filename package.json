@@ -1,6 +1,6 @@
 {
     "name": "extract_git_branches",
-    "version": "0.0.1",
+    "version": "0.1.1",
     "description": "",
     "scripts": {
         "setup": "npm ci",

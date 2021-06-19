@@ -22,7 +22,18 @@
 
 ## 使い方
 
+extract_git_branches をインストールしてから、シェルで実行します。
+
     extract_git_branches  __DotGitFolderPath__
+
+サンプル:
+
+    extract_git_branches  project/.git
+
+master ブランチと develop ブランチがあるプロジェクトの場合、下記のフォルダーができます。
+
+    project/branch_develop/
+    project/branch_master/
 
 
 ## インストール

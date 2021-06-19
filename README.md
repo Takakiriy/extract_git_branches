@@ -24,7 +24,19 @@ based on the `.git` folder.
 
 ## How to use
 
+Install extract_git_branches and then run it in your shell.
+
     extract_git_branches  __DotGitFolderPath__
+
+Example:
+
+    extract_git_branches  project/.git
+
+The project has master and develop branch,
+you will have the following folders.
+
+    project/branch_develop/
+    project/branch_master/
 
 
 ## Install
