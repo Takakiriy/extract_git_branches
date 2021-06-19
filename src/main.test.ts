@@ -9,7 +9,6 @@ if (path.basename(process.cwd()) !== 'src') {
     // Jest watch mode で２回目の実行をしても カレント フォルダー が引き継がれるため
     process.chdir('src');
 }
-
 beforeAll( async()=>{
     await checkNotInGitWorking();
     testWorkFolderFullPath = getTestWorkFolderFullPath();
@@ -18,23 +17,27 @@ beforeEach( () => {
     expect(testWorkFolderFullPath).not.toBe('');
 });
 
+// test
 test('1 branch', async () => {
-    fs.rmdirSync('test_data/_work', {recursive: true});
+    fs.rmdirSync(testWorkFolderFullPath, {recursive: true});
     await  lib.copyFolderSync('test_data/1.git',  `${testWorkFolderFullPath}/.git`);
 
     await callMain([`${testWorkFolderFullPath}/.git`]);
-    //expect(fs.existsSync('test_data/_work/branch/master/1.txt')).toBe(true);
+    expect(fs.existsSync(`${testWorkFolderFullPath}/branch_master/1.txt`)).toBe(true);
+    expect(fs.existsSync(`${testWorkFolderFullPath}/branch_master/2.txt`)).toBe(false);  // does not exist
+    expect(fs.existsSync(`${testWorkFolderFullPath}/branch_develop`)).toBe(false);  // does not exist
     fs.rmdirSync(testWorkFolderFullPath, {recursive: true});
 });
 
 test('2 branch', async () => {
-    fs.rmdirSync('test_data/_work', {recursive: true});
+    fs.rmdirSync(testWorkFolderFullPath, {recursive: true});
     await  lib.copyFolderSync('test_data/2.git',  `${testWorkFolderFullPath}/.git`);
 
     await callMain([`${testWorkFolderFullPath}/.git`]);
-    //expect(fs.existsSync('test_data/_work/branch/master/1.txt')).toBe(true);
-    //expect(fs.existsSync('test_data/_work/branch/develop/1.txt')).toBe(true);
-    //expect(fs.existsSync('test_data/_work/branch/develop/2.txt')).toBe(true);
+    expect(fs.existsSync(`${testWorkFolderFullPath}/branch_master/1.txt`)).toBe(true);
+    expect(fs.existsSync(`${testWorkFolderFullPath}/branch_master/2.txt`)).toBe(false);  // does not exist
+    expect(fs.existsSync(`${testWorkFolderFullPath}/branch_develop/1.txt`)).toBe(true);
+    expect(fs.existsSync(`${testWorkFolderFullPath}/branch_develop/2.txt`)).toBe(true);
     fs.rmdirSync(testWorkFolderFullPath, {recursive: true});
 });
 

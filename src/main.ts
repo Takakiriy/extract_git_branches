@@ -16,25 +16,29 @@ export async function  main() {
     const  currentFolder = process.cwd();
     const  dotGitFolderFullPath = path.resolve(programArguments[0]);
     const  workingFolderFullPath = path.dirname(dotGitFolderFullPath);
-const  d: string[] = [];
 
     try {
         // branchNames = ...
         await lib.copyFolderSync(dotGitFolderFullPath, `${workingFolderFullPath}/_current_branch/.git`);
         process.chdir(`${workingFolderFullPath}/_current_branch`);
         const  git = simpleGit();  // The git object has current folder separated from process current folder.
-        const  branchOutput = await git.branch();
+
+        const  branchOutput = await  git.branch();
         const  branchNames = Object.keys(branchOutput.branches).filter((branchName)=>(!branchName.includes('/')));
         process.chdir(workingFolderFullPath);
         fs.rmdirSync(`${workingFolderFullPath}/_current_branch`, {recursive: true});
 
+        // checkout each branch in each folder 
         for await (const branchName of branchNames) {
-            await lib.copyFolderSync(dotGitFolderFullPath, `${workingFolderFullPath}/branch_${branchName}/.git`);
-            process.chdir(`${workingFolderFullPath}/branch_${branchName}`);
 
+            await  lib.copyFolderSync(dotGitFolderFullPath, `${workingFolderFullPath}/branch_${branchName}/.git`);
+            process.chdir(`${workingFolderFullPath}/branch_${branchName}`);
             const  branchGit = simpleGit();  // The git object has current folder separated from process current folder.
-            d.push(process.cwd());
-            // branchGit.checkout('.');
+
+            await  branchGit.checkout('.');
+            await  branchGit.checkout(branchName);
+            process.chdir(workingFolderFullPath);
+            fs.rmdirSync(`${workingFolderFullPath}/branch_${branchName}/.git`, {recursive: true});
         }
     } finally {
         process.chdir(currentFolder);
