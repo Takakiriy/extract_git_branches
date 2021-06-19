@@ -30,7 +30,7 @@ extract_git_branches をインストールしてから、シェルで実行し�
 
     extract_git_branches  project/.git
 
-master ブランチと develop ブランチがあるプロジェクトの場合、下記のフォルダーができます。
+master ブランチと develop ブランチがあるプロジェクトの場合、下記のフォルダーができます。
 
     project/branch_develop/
     project/branch_master/
