@@ -5,16 +5,24 @@ import simpleGit from 'simple-git';
 
 // main
 export async function  main() {
-    locale = Intl.NumberFormat().resolvedOptions().locale;
-    if ('locale' in programOptions) {
-        locale = programOptions.locale;
+    if (programArguments.length >= 1) {
+        const  dotGitFolderFullPath = path.resolve(programArguments[0]);
+
+        await  checkoutBranches(dotGitFolderFullPath);
+    } else {
+        for (;;) {
+            const  dotGitFolderFullPath = await lib.inputPath('.git folder path> ');
+            if (dotGitFolderFullPath === 'exit()') {
+                break;
+            }
+            await  checkoutBranches(dotGitFolderFullPath);
+        }
     }
-    if (programArguments.length === 0) {
-        console.log('extract_git_branches  __DotGitFolderPath__');
-        return;
-    }
+}
+
+// checkoutBranches
+async function  checkoutBranches(dotGitFolderFullPath: string): Promise<void> {
     const  currentFolder = process.cwd();
-    const  dotGitFolderFullPath = path.resolve(programArguments[0]);
     const  workingFolderFullPath = path.dirname(dotGitFolderFullPath);
 
     try {
@@ -45,17 +53,79 @@ export async function  main() {
     }
 }
 
-// println
-function  println(message: any) {
+// getStdOut
+// Example:
+//    var d = getStdOut();  // Set break point here and watch the variable d
+function  getStdOut(): string[] {
+    return  stdout.split('\n');
+}
+
+// pp
+// Debug print.
+// #keyword: pp
+// Example:
+//    pp(var);
+// Example:
+//    var d = pp(var);
+//    d = d;  // Set break point here and watch the variable d
+// Example:
+//    try {
+//
+//        await main();
+//    } catch (e) {
+//        var d = pp(e);
+//        throw e;  // Set break point here and watch the variable d
+//    }
+function  pp(message: any = '') {
     if (typeof message === 'object') {
         message = JSON.stringify(message);
     }
-    if (withJest) {
+    debugOut.push(message.toString());
+    return debugOut;
+}
+export const  debugOut: string[] = [];
+
+// cc
+// Through counter.
+// #keyword: cc
+// Example:
+//   cc();
+// Example:
+//   var c = cc().debugOut;  // Set break point here and watch the variable c
+// Example:
+//   if ( cc(2).isTarget )
+//   var d = pp('');  // Set break point here and watch the variable d
+function  cc( targetCount: number = 9999999, label: string = '0' ) {
+    if (!(label in gCount)) {
+        gCount[label] = 0;
+    }
+
+    gCount[label] += 1;
+    pp( `${label}:countThrough[${label}] = ${gCount[label]}` );
+    const isTarget = ( gCount[label] === targetCount );
+
+    if (isTarget) {
+        pp( '    **** It is before the target! ****' );
+    }
+    return  { isTarget, debugOut };
+}
+const  gCount: {[name: string]: number} = {};
+
+// println
+// #keyword: println, console.log, consoleLog
+// Output any text to standard output.
+function  println(message: any, delayedExpanding: boolean = false) {
+    if (typeof message === 'object' && !delayedExpanding) {
+        message = JSON.stringify(message);
+    }
+    if (withJest && !delayedExpanding) {
         stdout += message.toString() + '\n';
+        pp(message.toString());
     } else {
-        console.log(message);
+        consoleLog(message);
     }
 }
+const  consoleLog = console.log;
 console.log = println;
 
 // callMainFromJest

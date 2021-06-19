@@ -1,5 +1,6 @@
 import * as commander from 'commander';
 import * as main from './main';
+import * as lib from './lib';
 
 function  exitFromCommander(e: commander.CommanderError) {
 	console.log(e.message);
@@ -25,14 +26,14 @@ async function  callMain() {
 
 				console.log( `ERROR: ${e.message}` );
 				const  timeOver = new Date();
-				timeOver.setSeconds( timeOver.getSeconds() + 5 );
+				timeOver.setSeconds( timeOver.getSeconds() + 1 );
 
 				while ((new Date()).getTime() < timeOver.getTime()) {
 				}
 			}
 		})
 		.finally(()=>{
-			main.InputObject.close();
+			lib.getInputObject().close();
 		});
 }
 callMain();
