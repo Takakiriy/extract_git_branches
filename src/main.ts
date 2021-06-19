@@ -1,8 +1,7 @@
 import * as path from "path";  // or path = require("path")
 import * as fs from "fs";  // file system
 import * as lib from "./lib";
-import simpleGit from 'simple-git';  // const simpleGit = require('simple-git');
-const git = simpleGit();
+import simpleGit from 'simple-git';
 
 // main
 export async function  main() {
@@ -17,11 +16,13 @@ export async function  main() {
     const  currentFolder = process.cwd();
     const  dotGitFolderFullPath = path.resolve(programArguments[0]);
     const  workingFolderFullPath = path.dirname(dotGitFolderFullPath);
+const  d: string[] = [];
 
     try {
         // branchNames = ...
         await lib.copyFolderSync(dotGitFolderFullPath, `${workingFolderFullPath}/_current_branch/.git`);
         process.chdir(`${workingFolderFullPath}/_current_branch`);
+        const  git = simpleGit();  // The git object has current folder separated from process current folder.
         const  branchOutput = await git.branch();
         const  branchNames = Object.keys(branchOutput.branches).filter((branchName)=>(!branchName.includes('/')));
         process.chdir(workingFolderFullPath);
@@ -31,7 +32,9 @@ export async function  main() {
             await lib.copyFolderSync(dotGitFolderFullPath, `${workingFolderFullPath}/branch_${branchName}/.git`);
             process.chdir(`${workingFolderFullPath}/branch_${branchName}`);
 
-            // git.checkout('.');
+            const  branchGit = simpleGit();  // The git object has current folder separated from process current folder.
+            d.push(process.cwd());
+            // branchGit.checkout('.');
         }
     } finally {
         process.chdir(currentFolder);
