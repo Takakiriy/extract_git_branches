@@ -51,7 +51,7 @@ function  println(message: any) {
 console.log = println;
 
 // callMainFromJest
-export function  callMainFromJest(parameters?: string[], options?: {[name: string]: string}) {
+export async function  callMainFromJest(parameters?: string[], options?: {[name: string]: string}) {
     withJest = true;
     stdout = '';
     if (parameters) {
@@ -65,7 +65,7 @@ export function  callMainFromJest(parameters?: string[], options?: {[name: strin
         programOptions = {};
     }
 
-    main();
+    await main();
 }
 
 var    locale = '';
