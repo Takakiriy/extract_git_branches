@@ -10,12 +10,25 @@ var  testWorkFolderFullPath = '';
 const  debug = false;
 
 async function  main() {
-    await  lib.checkNotInGitWorking();
-    testWorkFolderFullPath = lib.getTestWorkFolderFullPath();
+	if (false) {
 
-	await TestOfWithPath();
-	await TestOfWithoutPath();
-	console.log('Pass');
+		await Try();
+	} else {
+		await  lib.checkNotInGitWorking();
+		testWorkFolderFullPath = lib.getTestWorkFolderFullPath();
+
+		await TestOfWithPath();
+		await TestOfWithoutPath();
+		console.log('Pass');
+	}
+}
+
+// Try
+async function  Try() {
+	let  returns: ProcessReturns;
+
+    returns = await callChildProccess(`node ${scriptPath} /Users/totadashi/Desktop/branch_all/.git`, {});
+	console.log(returns);
 }
 
 // TestOfWithPath

@@ -9,6 +9,9 @@ import * as readline from 'readline';
 export async function  copyFolderSync(sourceFolderPath: string, destinationFolderPath: string) {
     const  currentFolderPath = process.cwd();
     const  destinationFolderFullPath = getFullPath(destinationFolderPath, currentFolderPath);
+    if ( ! fs.existsSync(sourceFolderPath)) {
+        throw new Error(`Not found "${sourceFolderPath}" folder`);
+    }
     process.chdir(sourceFolderPath);
 
     const  paths: string[] = await globby(['**/*']);

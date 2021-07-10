@@ -4,11 +4,7 @@ import * as path from "path";
 import * as lib from "./lib";
 const  callMain = main.callMainFromJest;
 var  testWorkFolderFullPath = '';
-
-if (path.basename(process.cwd()) !== 'src') {
-    // Jest watch mode で２回目の実行をしても カレント フォルダー が引き継がれるため
-    process.chdir('src');
-}
+process.chdir(process.env.HOME + '/GitProjects/GitHub/extract_git_branches/src');
 beforeAll( async()=>{
     await  lib.checkNotInGitWorking();
     testWorkFolderFullPath = lib.getTestWorkFolderFullPath();
